@@ -1,6 +1,6 @@
 package com.example.Inditex.prices.web;
 
-import com.example.Inditex.prices.dto.PriceDto;
+import com.example.Inditex.prices.web.entity.PriceResponse;
 import com.example.Inditex.prices.dto.PriceIncomingDto;
 import com.example.Inditex.prices.model.Prices;
 import com.example.Inditex.prices.services.PriceService;
@@ -26,8 +26,8 @@ public class PriceController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<PriceDto> newPrice(@Valid @RequestBody PriceIncomingDto priceIncomingDto) {
-        final PriceDto price = priceService.savePrice(priceIncomingDto);
+    public ResponseEntity<PriceResponse> newPrice(@Valid @RequestBody PriceIncomingDto priceIncomingDto) {
+        final PriceResponse price = priceService.savePrice(priceIncomingDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(price);
     }
 
