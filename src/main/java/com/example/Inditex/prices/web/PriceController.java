@@ -1,19 +1,28 @@
-package com.example.Inditex.prices.controller;
+package com.example.Inditex.prices.web;
 
+import com.example.Inditex.prices.dto.PriceDto;
+import com.example.Inditex.prices.dto.PriceIncomingDto;
 import com.example.Inditex.prices.model.Price;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/inditex/prices/")
-public class Controller {
+public class PriceController {
+
+    @Autowired
+    public PriceController() {
+    }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Price> newPrice(@RequestBody String price) {
+    public ResponseEntity<PriceDto> newPrice(@Valid @RequestBody PriceIncomingDto priceIncomingDto) {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -26,7 +35,5 @@ public class Controller {
     public ResponseEntity<Price> getPrice(@PathVariable("id") Long id) {
         return null;
     }
-
-
 }
 
