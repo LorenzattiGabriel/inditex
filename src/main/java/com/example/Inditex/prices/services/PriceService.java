@@ -2,7 +2,7 @@ package com.example.Inditex.prices.services;
 
 import com.example.Inditex.config.PriceConfig;
 import com.example.Inditex.prices.web.entity.PriceResponse;
-import com.example.Inditex.prices.dto.PriceIncomingDto;
+import com.example.Inditex.prices.web.entity.PriceIncomingDto;
 import com.example.Inditex.prices.model.Group;
 import com.example.Inditex.prices.model.Prices;
 import com.example.Inditex.prices.model.Product;
