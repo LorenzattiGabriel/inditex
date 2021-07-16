@@ -27,7 +27,8 @@ public class PriceController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<PriceDto> newPrice(@Valid @RequestBody PriceIncomingDto priceIncomingDto) {
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        final PriceDto price = priceService.savePrice(priceIncomingDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(price);
     }
 
     @RequestMapping(value = "/search/", method = RequestMethod.GET)
