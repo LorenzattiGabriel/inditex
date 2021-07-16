@@ -1,7 +1,7 @@
 package com.example.Inditex.prices.repository;
 
-import com.example.Inditex.prices.model.Price;
+import com.example.Inditex.prices.model.Prices;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PriceRepository  extends JpaRepository<Price, Long> {
+public interface PriceRepository  extends JpaRepository<Prices, Long> {
 }

@@ -6,11 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-@Entity
+@Entity(name = "Brand")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Group  implements Serializable {
+public class Group implements Serializable {
 
     @Setter
     private Long id;

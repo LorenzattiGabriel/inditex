@@ -2,7 +2,7 @@ package com.example.Inditex.prices.web;
 
 import com.example.Inditex.prices.dto.PriceDto;
 import com.example.Inditex.prices.dto.PriceIncomingDto;
-import com.example.Inditex.prices.model.Price;
+import com.example.Inditex.prices.model.Prices;
 import com.example.Inditex.prices.services.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,12 +32,12 @@ public class PriceController {
     }
 
     @RequestMapping(value = "/search/", method = RequestMethod.GET)
-    public List<Price> getPrices() {
+    public List<Prices> getPrices() {
         return Collections.emptyList();
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
-    public ResponseEntity<Price> getPrice(@PathVariable("id") Long id) {
+    public ResponseEntity<Prices> getPrice(@PathVariable("id") Long id) {
         return null;
     }
 }
