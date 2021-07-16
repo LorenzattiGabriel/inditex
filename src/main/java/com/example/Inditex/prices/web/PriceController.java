@@ -3,6 +3,7 @@ package com.example.Inditex.prices.web;
 import com.example.Inditex.prices.dto.PriceDto;
 import com.example.Inditex.prices.dto.PriceIncomingDto;
 import com.example.Inditex.prices.model.Price;
+import com.example.Inditex.prices.services.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,11 @@ import java.util.List;
 @RequestMapping(value = "/inditex/prices/")
 public class PriceController {
 
+    private PriceService priceService;
+
     @Autowired
-    public PriceController() {
+    public PriceController(PriceService priceService) {
+        this.priceService = priceService;
     }
 
     @RequestMapping(method = RequestMethod.POST)
