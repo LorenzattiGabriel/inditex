@@ -1,26 +1,21 @@
 package com.example.Inditex.prices.web.entity;
 
+import lombok.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ResponseError {
 
-    private final Integer errorCode;
-    private final String errorMessage;
-    private final String action;
+    @Setter
+    @Getter
+    private Integer errorCode;
 
-    public ResponseError(Integer errorCode, String errorMessage, String action) {
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
-        this.action = action;
-    }
+    @Setter
+    @Getter
+    private String errorMessage;
 
-    public Integer getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public String getAction() {
-        return action;
-    }
+    @Setter
+    @Getter
+    private String action;
 }

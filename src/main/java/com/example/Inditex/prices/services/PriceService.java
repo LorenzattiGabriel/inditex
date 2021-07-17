@@ -11,6 +11,7 @@ import com.example.Inditex.prices.repository.PriceRepository;
 import com.example.Inditex.prices.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.Inditex.prices.exceptions.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -19,13 +20,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static com.example.Inditex.prices.exceptions.rule.BusinessRulesError.BusinessError.*;
+import static com.example.Inditex.prices.model.Priority.HIGH;
+import static com.example.Inditex.prices.model.Priority.LOW;
+
 @Service
 public class PriceService implements Price {
 
     public static final int PERCENTAGE = 100;
-    public static final int PRIORITY = 1;
-    public static final int LESS_PRIORITY = 0;
-    private String CURRENCY = "curr";
+    private final String CURRENCY = "curr";
 
     private final PriceRepository priceRepository;
     private final GroupRepository groupRepository;
@@ -80,12 +83,12 @@ public class PriceService implements Price {
 
     private Group getGroupOfBrand(Long id) {
         Optional<Group> group = Optional.of(groupRepository.getById(id));
-        return group.orElseThrow(null);
+        return group.orElseThrow(() -> new BusinessException(GROUP_NOT_FOUND));
     }
 
     private Product getProductOfBrand(Long id) {
         Optional<Product> group = Optional.of(productRepository.getById(id));
-        return group.orElse(null);
+        return group.orElseThrow(() -> new BusinessException(PRODUCT_NOT_FOUND));
     }
 
     private LocalDateTime convertInstantToDateTime(Instant date) {
@@ -94,7 +97,7 @@ public class PriceService implements Price {
 
     private String getCurrency() {
         Optional<String> currency = Optional.ofNullable(pricesConfig.get(CURRENCY));
-        return currency.orElse(null);
+        return currency.orElseThrow(() -> new BusinessException(CURRENCY_NOT_FOUND));
     }
 
     private Float getPrice() {
@@ -103,13 +106,13 @@ public class PriceService implements Price {
         if (coeficent.isPresent()) {
             taxes = Float.parseFloat(coeficent.get());
         } else {
-            return null;
+            throw new BusinessException(CURRENCY_NOT_FOUND);
         }
         return (float) ((Math.random() * PERCENTAGE) * taxes);
     }
 
     private int getPriority() {
-        return ThreadLocalRandom.current().nextBoolean() ? LESS_PRIORITY : PRIORITY;
+        return ThreadLocalRandom.current().nextInt(LOW.getPriority(), (HIGH.getPriority() + 1));
     }
 
     private LocalDateTime getEndDate(LocalDateTime startDate) {

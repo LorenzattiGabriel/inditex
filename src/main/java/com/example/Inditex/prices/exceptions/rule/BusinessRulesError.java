@@ -1,10 +1,13 @@
-package com.example.Inditex.exceptions.rule;
+package com.example.Inditex.prices.exceptions.rule;
 
 public class BusinessRulesError {
 
     public enum BusinessError {
 
-        ID_FORMAT("");
+        GROUP_NOT_FOUND(" the brand does not exist in database"),
+        CURRENCY_NOT_FOUND (" currency not found"),
+
+        PRODUCT_NOT_FOUND(" the product does not exist in database");
 
         private final String errorDescription;
 

@@ -1,10 +1,12 @@
 package com.example.Inditex.prices.web.entity;
 
 
-
 public enum ServiceError {
-    UNKNOWN_ERROR(500, "Unknown error");
 
+    BUSINESS_BRAND_NOT_FOUND(404, "Brand  not found"),
+    BUSINESS_PRODUCT_NOT_FOUND(404, "Product  not found"),
+    BUSINESS_CURRENCY_NOT_FOUND(404, "Currency  not found"),
+    UNKNOWN_ERROR(500, "Unknown Error");
 
     private final Integer errorCode;
     private final String errorDescription;

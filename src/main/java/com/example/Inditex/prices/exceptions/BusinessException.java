@@ -1,4 +1,4 @@
-package com.example.Inditex.exceptions;
+package com.example.Inditex.prices.exceptions;
 
 
 import com.example.Inditex.prices.exceptions.rule.BusinessRulesError.BusinessError;
@@ -19,4 +19,5 @@ public class BusinessException extends RuntimeException {
     public String getMessage() {
         return businessError.getErrorDescription();
     }
+
 }
