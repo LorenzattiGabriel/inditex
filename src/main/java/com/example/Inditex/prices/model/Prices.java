@@ -19,8 +19,7 @@ public class Prices implements Serializable {
     @Setter
     @Getter
     @OneToOne
-    @MapKey(name = "BRAND_ID")
-    private Group group;
+    private Brand group;
 
     @Setter
     @Getter
@@ -37,7 +36,6 @@ public class Prices implements Serializable {
     @Setter
     @Getter
     @OneToOne
-    @MapKey(name = "PRODUCT_ID")
     private Product product;
 
     @Setter
@@ -64,7 +62,7 @@ public class Prices implements Serializable {
             this.prices = new Prices();
         }
 
-        public Builder withGroup(Group group) {
+        public Builder withGroup(Brand group) {
             prices.setGroup(group);
             return this;
         }

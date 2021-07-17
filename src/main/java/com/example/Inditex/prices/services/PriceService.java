@@ -3,7 +3,7 @@ package com.example.Inditex.prices.services;
 import com.example.Inditex.config.PriceConfig;
 import com.example.Inditex.prices.web.entity.PriceResponse;
 import com.example.Inditex.prices.web.entity.PriceIncomingDto;
-import com.example.Inditex.prices.model.Group;
+import com.example.Inditex.prices.model.Brand;
 import com.example.Inditex.prices.model.Prices;
 import com.example.Inditex.prices.model.Product;
 import com.example.Inditex.prices.repository.GroupRepository;
@@ -66,8 +66,8 @@ public class PriceService implements Price {
 
     private Prices getPriceForCurrentBrand(PriceIncomingDto priceIncomingDto) {
 
-        Group group = getGroupOfBrand(priceIncomingDto.getBrandId());
-        Product product = getProductOfBrand(priceIncomingDto.getProductId());
+        Brand group = getGroupOfBrand((long) priceIncomingDto.getBrandId());
+        Product product = getProductOfBrand((long) priceIncomingDto.getProductId());
         LocalDateTime startDate = convertInstantToDateTime(priceIncomingDto.getStartDate());
 
         return Prices.builder()
@@ -81,8 +81,8 @@ public class PriceService implements Price {
                 .build();
     }
 
-    private Group getGroupOfBrand(Long id) {
-        Optional<Group> group = Optional.of(groupRepository.getById(id));
+    private Brand getGroupOfBrand(Long id) {
+        Optional<Brand> group = Optional.of(groupRepository.getById(id));
         return group.orElseThrow(() -> new BusinessException(GROUP_NOT_FOUND));
     }
 

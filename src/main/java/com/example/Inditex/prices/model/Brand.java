@@ -3,21 +3,25 @@ package com.example.Inditex.prices.model;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-@Entity(name = "Brand")
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Group implements Serializable {
+public class Brand implements Serializable {
 
     @Setter
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Setter
     @Getter
-    private String group;
+    private String name;
 
     @Id
     public Long getId() {

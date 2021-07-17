@@ -1,5 +1,6 @@
 package com.example.Inditex.prices.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class PriceIncomingDto {
     @PastOrPresent
     @Setter
     @Getter
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     private Instant startDate;
 
     @JsonProperty(required = true)
@@ -24,13 +26,13 @@ public class PriceIncomingDto {
     @Setter
     @Getter
     @NotNull
-    private Long productId;
+    private int productId;
 
     @JsonProperty(required = true)
     @Positive
     @Setter
     @Getter
     @NotNull
-    private Long brandId;
+    private int brandId;
 
 }
