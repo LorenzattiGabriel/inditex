@@ -1,21 +1,23 @@
 package com.example.Inditex.prices.services;
 
 import com.example.Inditex.config.PriceConfig;
-import com.example.Inditex.prices.web.entity.PriceResponse;
-import com.example.Inditex.prices.web.entity.PriceIncomingDto;
+import com.example.Inditex.prices.exceptions.*;
+import com.example.Inditex.prices.exceptions.TechnicalException;
 import com.example.Inditex.prices.model.Brand;
 import com.example.Inditex.prices.model.Prices;
 import com.example.Inditex.prices.model.Product;
 import com.example.Inditex.prices.repository.GroupRepository;
 import com.example.Inditex.prices.repository.PriceRepository;
 import com.example.Inditex.prices.repository.ProductRepository;
+import com.example.Inditex.prices.web.entity.PriceIncomingDto;
+import com.example.Inditex.prices.web.entity.PriceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.Inditex.prices.exceptions.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -66,8 +68,8 @@ public class PriceService implements Price {
 
     private Prices getPriceForCurrentBrand(PriceIncomingDto priceIncomingDto) {
 
-        Brand group = getGroupOfBrand((long) priceIncomingDto.getBrandId());
-        Product product = getProductOfBrand((long) priceIncomingDto.getProductId());
+        Brand group = getGroupOfBrand((long) priceIncomingDto.getBrand());
+        Product product = getProductOfBrand((long) priceIncomingDto.getProduct());
         LocalDateTime startDate = convertInstantToDateTime(priceIncomingDto.getStartDate());
 
         return Prices.builder()
@@ -82,8 +84,8 @@ public class PriceService implements Price {
     }
 
     private Brand getGroupOfBrand(Long id) {
-        Optional<Brand> group = Optional.of(groupRepository.getById(id));
-        return group.orElseThrow(() -> new BusinessException(GROUP_NOT_FOUND));
+        Optional<Brand> brand = Optional.of(groupRepository.getById(id));
+        return brand.orElseThrow(() -> new BusinessException(GROUP_NOT_FOUND));
     }
 
     private Product getProductOfBrand(Long id) {
@@ -91,8 +93,14 @@ public class PriceService implements Price {
         return group.orElseThrow(() -> new BusinessException(PRODUCT_NOT_FOUND));
     }
 
-    private LocalDateTime convertInstantToDateTime(Instant date) {
-        return LocalDateTime.ofInstant(date, ZoneOffset.UTC);
+    private LocalDateTime convertInstantToDateTime(Date date) {
+        try {
+            return date.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+        } catch (DateTimeParseException e) {
+            throw new TechnicalException("Error trying to parse to Local Time the start date", e);
+        }
     }
 
     private String getCurrency() {

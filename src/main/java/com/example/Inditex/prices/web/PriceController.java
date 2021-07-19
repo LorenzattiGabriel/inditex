@@ -40,6 +40,9 @@ public class PriceController {
             responseEntity = new ResponseEntity<>(priceResponse, HttpStatus.OK);
         } catch (BusinessException e) {
             responseEntity = createResponse400(e.getBusinessError());
+        } catch (TechnicalException e) {
+            responseEntity = createResponse500(TECHNICAL_ERROR);
+
         } catch (Exception e) {
             responseEntity = createResponse500(UNKNOWN_ERROR);
         }
