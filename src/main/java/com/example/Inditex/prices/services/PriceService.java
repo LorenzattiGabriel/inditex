@@ -6,7 +6,7 @@ import com.example.Inditex.prices.exceptions.TechnicalException;
 import com.example.Inditex.prices.model.Brand;
 import com.example.Inditex.prices.model.Prices;
 import com.example.Inditex.prices.model.Product;
-import com.example.Inditex.prices.repository.GroupRepository;
+import com.example.Inditex.prices.repository.BrandRepository;
 import com.example.Inditex.prices.repository.PriceRepository;
 import com.example.Inditex.prices.repository.ProductRepository;
 import com.example.Inditex.prices.web.entity.PriceIncomingDto;
@@ -14,12 +14,12 @@ import com.example.Inditex.prices.web.entity.PriceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.example.Inditex.prices.exceptions.rule.BusinessRulesError.BusinessError.*;
@@ -30,20 +30,19 @@ import static com.example.Inditex.prices.model.Priority.LOW;
 public class PriceService implements Price {
 
     public static final int PERCENTAGE = 100;
-    private final String CURRENCY = "curr";
 
     private final PriceRepository priceRepository;
-    private final GroupRepository groupRepository;
+    private final BrandRepository brandRepository;
     private final ProductRepository productRepository;
-    private final Map<String, String> pricesConfig;
+    private final PriceConfig pricesConfig;
 
     @Autowired
-    public PriceService(PriceRepository priceRepository, GroupRepository groupRepository, ProductRepository productRepository,
+    public PriceService(PriceRepository priceRepository, BrandRepository brandRepository, ProductRepository productRepository,
                         PriceConfig priceConfig) {
         this.priceRepository = priceRepository;
-        this.groupRepository = groupRepository;
+        this.brandRepository = brandRepository;
         this.productRepository = productRepository;
-        this.pricesConfig = priceConfig.getProperties();
+        this.pricesConfig = priceConfig;
     }
 
     public PriceResponse savePrice(PriceIncomingDto priceIncomingDto) {
@@ -54,9 +53,27 @@ public class PriceService implements Price {
         return PriceDtoFromNewPrice(price);
     }
 
+    public PriceResponse getPrice(Integer brandId, Integer productId, Date startDate) {
+        Iterable<Prices> all = priceRepository.findAll();
+        List<Prices> prices = priceRepository.findPrices(convertToDateTime(startDate), brandId, productId);
+
+        Optional<Prices> priceWithPriority = getPriceWithMorePriority(prices);
+
+        if (!priceWithPriority.isPresent()) {
+            throw new BusinessException(PRICE_NOT_FOUND);
+        }
+
+        return PriceDtoFromNewPrice(priceWithPriority.get());
+    }
+
+    private Optional<Prices> getPriceWithMorePriority(List<Prices> prices) {
+        return prices.stream().
+                max(Comparator.comparing(Prices::getPriority));
+    }
+
     private PriceResponse PriceDtoFromNewPrice(Prices price) {
         return PriceResponse.builder()
-                .withBrandId(price.getGroup().getId())
+                .withBrandId(price.getBrand().getId())
                 .withProductId(price.getProduct().getId())
                 .withStartDate(price.getStartDate())
                 .withEndDate(price.getEndDate())
@@ -68,12 +85,12 @@ public class PriceService implements Price {
 
     private Prices getPriceForCurrentBrand(PriceIncomingDto priceIncomingDto) {
 
-        Brand group = getGroupOfBrand((long) priceIncomingDto.getBrand());
+        Brand brand = getGroupOfBrand((long) priceIncomingDto.getBrand());
         Product product = getProductOfBrand((long) priceIncomingDto.getProduct());
-        LocalDateTime startDate = convertInstantToDateTime(priceIncomingDto.getStartDate());
+        LocalDateTime startDate = convertToDateTime(priceIncomingDto.getStartDate());
 
         return Prices.builder()
-                .withGroup(group)
+                .withGroup(brand)
                 .withPrice(getPrice())
                 .withCurr(getCurrency())
                 .withEndDate(getEndDate(startDate))
@@ -84,19 +101,19 @@ public class PriceService implements Price {
     }
 
     private Brand getGroupOfBrand(Long id) {
-        Optional<Brand> brand = Optional.of(groupRepository.getById(id));
+        Optional<Brand> brand = brandRepository.findById(id);
         return brand.orElseThrow(() -> new BusinessException(GROUP_NOT_FOUND));
     }
 
     private Product getProductOfBrand(Long id) {
-        Optional<Product> group = Optional.of(productRepository.getById(id));
+        Optional<Product> group = productRepository.findById(id);
         return group.orElseThrow(() -> new BusinessException(PRODUCT_NOT_FOUND));
     }
 
-    private LocalDateTime convertInstantToDateTime(Date date) {
+    private LocalDateTime convertToDateTime(Date date) {
         try {
             return date.toInstant()
-                    .atZone(ZoneId.systemDefault())
+                    .atZone(ZoneOffset.UTC)
                     .toLocalDateTime();
         } catch (DateTimeParseException e) {
             throw new TechnicalException("Error trying to parse to Local Time the start date", e);
@@ -104,19 +121,17 @@ public class PriceService implements Price {
     }
 
     private String getCurrency() {
-        Optional<String> currency = Optional.ofNullable(pricesConfig.get(CURRENCY));
+        Optional<String> currency = Optional.ofNullable(pricesConfig.getCurr());
         return currency.orElseThrow(() -> new BusinessException(CURRENCY_NOT_FOUND));
     }
 
-    private Float getPrice() {
-        float taxes = 0;
-        Optional<String> coeficent = Optional.ofNullable(pricesConfig.get(CURRENCY));
-        if (coeficent.isPresent()) {
-            taxes = Float.parseFloat(coeficent.get());
+    private float getPrice() {
+        Optional<Float> taxes = Optional.ofNullable(pricesConfig.getTaxes());
+        if (taxes.isPresent()) {
+            return (float) ((Math.random() * PERCENTAGE) * taxes.get());
         } else {
             throw new BusinessException(CURRENCY_NOT_FOUND);
         }
-        return (float) ((Math.random() * PERCENTAGE) * taxes);
     }
 
     private int getPriority() {
@@ -124,14 +139,10 @@ public class PriceService implements Price {
     }
 
     private LocalDateTime getEndDate(LocalDateTime startDate) {
-        int afterDays = 0;
-        Optional<String> days = Optional.ofNullable(pricesConfig.get(CURRENCY));
+        int minDay = (int) LocalDate.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth()).toEpochDay();
+        int maxDay = (int) LocalDate.of(startDate.getYear(), 12, 31).toEpochDay();
+        long randomDay = minDay + ThreadLocalRandom.current().nextInt(maxDay - minDay);
 
-        if (days.isPresent()) {
-            afterDays = Integer.parseInt(days.get());
-        } else {
-            return null;
-        }
-        return startDate.plusDays(afterDays);
+        return LocalDate.ofEpochDay(randomDay).atStartOfDay();
     }
 }

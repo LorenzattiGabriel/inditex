@@ -1,5 +1,6 @@
 package com.example.Inditex.prices.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,24 +14,27 @@ import java.time.LocalDateTime;
 public class Prices implements Serializable {
 
     @Id
-    @Setter
+    @Getter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Setter
     @Getter
     @OneToOne
-    private Brand group;
+    private Brand brand;
 
     @Setter
     @Getter
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
 
     @Setter
     @Getter
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
 
     @Getter
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int priceList;
 
     @Setter
@@ -63,7 +67,7 @@ public class Prices implements Serializable {
         }
 
         public Builder withGroup(Brand group) {
-            prices.setGroup(group);
+            prices.setBrand(group);
             return this;
         }
 
