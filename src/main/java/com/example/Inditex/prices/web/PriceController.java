@@ -10,6 +10,10 @@ import com.example.Inditex.prices.web.entity.ResponseError;
 import com.example.Inditex.prices.web.entity.ServiceError;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -34,6 +38,8 @@ import java.util.Date;
 
 import static com.example.Inditex.prices.web.entity.ServiceError.*;
 
+
+@Api(value = "Price Management System", description = "Several operations in a list of prices")
 @RestController
 @RequestMapping(value = "/inditex/prices/")
 public class PriceController {
@@ -52,6 +58,13 @@ public class PriceController {
         this.priceService = priceService;
     }
 
+    @ApiOperation(value = "Save a new price", response = HttpStatus.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully saved price"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Business Exception"),
+            @ApiResponse(code = 500, message = "Technical Exception"),
+    })
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> newPrice(@Valid @RequestBody PriceIncomingDto priceIncomingDto) {
         ResponseEntity<?> responseEntity;
@@ -69,6 +82,13 @@ public class PriceController {
         return responseEntity;
     }
 
+    @ApiOperation(value = "get price filtered by parameters", response = HttpStatus.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "get filtered price"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Business Exception"),
+            @ApiResponse(code = 500, message = "Technical Exception"),
+    })
     @RequestMapping(value = "/search/", method = RequestMethod.GET)
     public ResponseEntity<?> getPrices(@RequestParam @NotNull @Positive Integer brandId,
                                        @RequestParam @NotNull @Positive Integer productId,
