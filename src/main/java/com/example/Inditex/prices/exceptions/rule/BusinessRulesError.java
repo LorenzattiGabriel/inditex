@@ -5,6 +5,7 @@ public class BusinessRulesError {
     public enum BusinessError {
 
         GROUP_NOT_FOUND(" the brand does not exist in database"),
+        PRICE_NOT_FOUND(" the price does not exist in database"),
         CURRENCY_NOT_FOUND (" currency not found"),
 
         PRODUCT_NOT_FOUND(" the product does not exist in database");
