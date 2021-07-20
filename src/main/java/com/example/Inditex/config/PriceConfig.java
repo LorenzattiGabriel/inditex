@@ -1,21 +1,27 @@
 package com.example.Inditex.config;
 
 
+import com.example.Inditex.config.factory.YamlPropertySourceFactory;
+import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.HashMap;
+import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
-@ConfigurationProperties(prefix = "general-config")
+@ConfigurationProperties(prefix = "config")
+@PropertySource(value = "classpath:prices.yml", factory = YamlPropertySourceFactory.class)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PriceConfig {
 
-    private HashMap<String, String> properties;
+    @Setter
+    @Getter
+    private String curr;
 
-    public HashMap<String, String> getProperties() {
-        return this.properties;
-    }
-
+    @Setter
+    @Getter
+    private Float taxes;
 
 }
