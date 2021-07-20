@@ -1,5 +1,4 @@
 # GENERAL CONFIG
-general-config:
-      curr: eurr
-      taxes: 0.21
-      endDate: 72
+config:
+ curr: EUR
+ taxes: 0.21
