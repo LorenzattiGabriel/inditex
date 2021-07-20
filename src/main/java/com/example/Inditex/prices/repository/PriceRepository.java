@@ -13,9 +13,9 @@ public interface PriceRepository extends CrudRepository<Prices, Long> {
     @Query("select p from Prices p " +
             "where p.brand.id = :#{#brandId} " +
             "AND p.product.id = :#{#productId} " +
-            "AND   p.startDate <=  :startDate " +
-            "AND   p.endDate >=  :startDate")
-    List<Prices> findPrices(@Param("startDate") LocalDateTime startDate,
+            "AND   p.startDate <=  :applicationDate " +
+            "AND   p.endDate >=  :applicationDate")
+    List<Prices> findPrices(@Param("applicationDate") LocalDateTime applicationDate,
                             @Param("brandId") long brandId,
                             @Param("productId") long productId);
 

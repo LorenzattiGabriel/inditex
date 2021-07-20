@@ -54,7 +54,6 @@ public class PriceService implements Price {
     }
 
     public PriceResponse getPrice(Integer brandId, Integer productId, Date startDate) {
-        Iterable<Prices> all = priceRepository.findAll();
         List<Prices> prices = priceRepository.findPrices(convertToDateTime(startDate), brandId, productId);
 
         Optional<Prices> priceWithPriority = getPriceWithMorePriority(prices);
