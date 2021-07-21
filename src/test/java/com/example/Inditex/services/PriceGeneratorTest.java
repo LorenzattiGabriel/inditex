@@ -8,7 +8,7 @@ import com.example.Inditex.prices.model.Prices;
 import com.example.Inditex.prices.model.Product;
 import com.example.Inditex.prices.repository.BrandRepository;
 import com.example.Inditex.prices.repository.ProductRepository;
-import com.example.Inditex.prices.services.PriceGenerator;
+import com.example.Inditex.prices.generator.PriceGenerator;
 import com.example.Inditex.prices.web.entity.PriceIncomingDto;
 import org.junit.Before;
 import org.junit.Test;

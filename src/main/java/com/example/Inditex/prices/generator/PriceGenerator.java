@@ -1,4 +1,4 @@
-package com.example.Inditex.prices.services;
+package com.example.Inditex.prices.generator;
 
 import com.example.Inditex.config.PriceConfig;
 import com.example.Inditex.prices.exceptions.*;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;

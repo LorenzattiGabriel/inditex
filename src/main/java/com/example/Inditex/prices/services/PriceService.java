@@ -1,6 +1,7 @@
 package com.example.Inditex.prices.services;
 
 import com.example.Inditex.prices.exceptions.*;
+import com.example.Inditex.prices.generator.PriceGenerator;
 import com.example.Inditex.prices.model.Prices;
 import com.example.Inditex.prices.repository.PriceRepository;
 import com.example.Inditex.prices.web.entity.PriceIncomingDto;

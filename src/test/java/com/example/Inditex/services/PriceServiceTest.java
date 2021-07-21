@@ -6,7 +6,7 @@ import com.example.Inditex.prices.model.Brand;
 import com.example.Inditex.prices.model.Prices;
 import com.example.Inditex.prices.model.Product;
 import com.example.Inditex.prices.repository.PriceRepository;
-import com.example.Inditex.prices.services.PriceGenerator;
+import com.example.Inditex.prices.generator.PriceGenerator;
 import com.example.Inditex.prices.services.PriceService;
 import com.example.Inditex.prices.web.entity.PriceIncomingDto;
 import com.example.Inditex.prices.web.entity.PriceResponse;
