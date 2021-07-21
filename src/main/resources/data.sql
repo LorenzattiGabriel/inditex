@@ -24,7 +24,7 @@ INSERT INTO PRICES (start_date,
                     priority,
                     final_price,
                     curr)
-VALUES ({ts '2020-06-14 15:00:00'}, {ts '2020-06-14 18:30:00'}, 35455, 1, 1, 25.45, 'EUR');
+VALUES ({ts '2020-06-14 15:00:00'}, {ts '2020-06-14 20:00:00'}, 35455, 1, 1, 25.45, 'EUR');
 
 
 INSERT INTO PRICES (start_date,
