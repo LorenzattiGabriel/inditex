@@ -1,4 +1,4 @@
-package com.example.Inditex.services;
+package com.example.Inditex.generator;
 
 import com.example.Inditex.config.PriceConfig;
 import com.example.Inditex.prices.exceptions.*;
@@ -17,7 +17,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
@@ -60,8 +60,7 @@ public class PriceGeneratorTest {
         priceIncomingDto.setBrand(1);
         priceIncomingDto.setProduct(1);
 
-        priceIncomingDto.setStartDate(Date.from(startDate.toInstant(ZoneOffset.UTC)));
-
+        priceIncomingDto.setStartDate(Date.from(startDate.toInstant(OffsetDateTime.now().getOffset())));
 
         float finalPrice = (float) 22.5;
 
