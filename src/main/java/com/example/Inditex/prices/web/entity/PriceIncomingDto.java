@@ -3,15 +3,11 @@ package com.example.Inditex.prices.web.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
 @Data

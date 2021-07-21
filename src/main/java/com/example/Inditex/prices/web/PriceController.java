@@ -1,6 +1,5 @@
 package com.example.Inditex.prices.web;
 
-
 import com.example.Inditex.prices.exceptions.rule.BusinessRulesError.*;
 import com.example.Inditex.prices.exceptions.*;
 import com.example.Inditex.prices.web.entity.PriceResponse;
@@ -8,50 +7,30 @@ import com.example.Inditex.prices.web.entity.PriceIncomingDto;
 import com.example.Inditex.prices.services.PriceService;
 import com.example.Inditex.prices.web.entity.ResponseError;
 import com.example.Inditex.prices.web.entity.ServiceError;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static com.example.Inditex.prices.web.entity.ServiceError.*;
-
 
 @Api(value = "Price Management System", description = "Several operations in a list of prices")
 @RestController
 @RequestMapping(value = "/inditex/prices/")
 public class PriceController {
 
-    private PriceService priceService;
-
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        dateFormat.setLenient(false);
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
-    }
+    private final PriceService priceService;
 
     @Autowired
     public PriceController(PriceService priceService) {
@@ -89,10 +68,10 @@ public class PriceController {
             @ApiResponse(code = 404, message = "Business Exception"),
             @ApiResponse(code = 500, message = "Technical Exception"),
     })
-    @RequestMapping(value = "/search/", method = RequestMethod.GET)
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
     public ResponseEntity<?> getPrices(@RequestParam @NotNull @Positive Integer brandId,
                                        @RequestParam @NotNull @Positive Integer productId,
-                                       @RequestParam @NotNull @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+                                       @RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
                                                Date startDate) {
         ResponseEntity<?> responseEntity;
         try {
