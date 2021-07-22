@@ -30,7 +30,6 @@ import static org.mockito.Mockito.when;
 
 public class PriceControllerTest {
 
-    public static final String EUR = "EUR";
     public static final String ENTER_A_EXISTENT_PRODUCT_ID = "Enter a existent product id";
     public static final String ASK_YOUR_ADMINISTRATOR = "Ask your administrator";
     public static final String ENTER_A_CORRECT_PARAMETERS_OF_SEARCH = "Enter a correct parameters of search";
