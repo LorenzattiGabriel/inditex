@@ -4,7 +4,7 @@ import com.example.Inditex.config.PriceConfig;
 import com.example.Inditex.prices.exceptions.*;
 import com.example.Inditex.prices.exceptions.TechnicalException;
 import com.example.Inditex.prices.model.Brand;
-import com.example.Inditex.prices.model.Prices;
+import com.example.Inditex.prices.model.Price;
 import com.example.Inditex.prices.model.Product;
 import com.example.Inditex.prices.repository.BrandRepository;
 import com.example.Inditex.prices.repository.ProductRepository;
@@ -64,7 +64,7 @@ public class PriceGeneratorTest {
 
         float finalPrice = (float) 22.5;
 
-        Prices expectedPrice = new Prices(1L, brand, startDate, endDate, 0, product, 1, finalPrice, EUR);
+        Price expectedPrice = new Price(1L, brand, startDate, endDate, 0, product, 1, finalPrice, EUR);
 
         //when
         when(brandRepository.findById(any())).thenReturn(Optional.of(brand));
@@ -73,7 +73,7 @@ public class PriceGeneratorTest {
         when(priceConfig.getTaxes()).thenReturn((float) 0.21);
 
 
-        Prices price = priceGenerator.getPriceForCurrentBrand(priceIncomingDto);
+        Price price = priceGenerator.getPriceForCurrentBrand(priceIncomingDto);
 
         //then
         assertEquals(expectedPrice.getBrand().getId(), price.getBrand().getId());

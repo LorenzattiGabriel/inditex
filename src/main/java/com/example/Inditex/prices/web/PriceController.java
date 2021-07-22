@@ -2,6 +2,7 @@ package com.example.Inditex.prices.web;
 
 import com.example.Inditex.prices.exceptions.rule.BusinessRulesError.*;
 import com.example.Inditex.prices.exceptions.*;
+import com.example.Inditex.prices.services.Operations;
 import com.example.Inditex.prices.web.entity.PriceResponse;
 import com.example.Inditex.prices.web.entity.PriceIncomingDto;
 import com.example.Inditex.prices.services.PriceService;
@@ -30,11 +31,11 @@ import static com.example.Inditex.prices.web.entity.ServiceError.*;
 @RequestMapping(value = "/inditex/prices/")
 public class PriceController {
 
-    private final PriceService priceService;
+    private final Operations price;
 
     @Autowired
-    public PriceController(PriceService priceService) {
-        this.priceService = priceService;
+    public PriceController(PriceService price) {
+        this.price = price;
     }
 
     @ApiOperation(value = "Save a new price", response = HttpStatus.class)
@@ -48,7 +49,7 @@ public class PriceController {
     public ResponseEntity<?> newPrice(@Valid @RequestBody PriceIncomingDto priceIncomingDto) {
         ResponseEntity<?> responseEntity;
         try {
-            final PriceResponse priceResponse = priceService.savePrice(priceIncomingDto);
+            final PriceResponse priceResponse = price.savePrice(priceIncomingDto);
             responseEntity = new ResponseEntity<>(priceResponse, HttpStatus.OK);
         } catch (BusinessException e) {
             responseEntity = createResponse400(e.getBusinessError());
@@ -75,7 +76,7 @@ public class PriceController {
                                                Date startDate) {
         ResponseEntity<?> responseEntity;
         try {
-            final PriceResponse priceResponse = priceService.getPrice(brandId, productId, startDate);
+            final PriceResponse priceResponse = price.getPrice(brandId, productId, startDate);
             responseEntity = new ResponseEntity<>(priceResponse, HttpStatus.OK);
         } catch (BusinessException e) {
             responseEntity = createResponse400(e.getBusinessError());

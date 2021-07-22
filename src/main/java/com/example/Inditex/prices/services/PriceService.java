@@ -2,7 +2,7 @@ package com.example.Inditex.prices.services;
 
 import com.example.Inditex.prices.exceptions.*;
 import com.example.Inditex.prices.generator.PriceGenerator;
-import com.example.Inditex.prices.model.Prices;
+import com.example.Inditex.prices.model.Price;
 import com.example.Inditex.prices.repository.PriceRepository;
 import com.example.Inditex.prices.web.entity.PriceIncomingDto;
 import com.example.Inditex.prices.web.entity.PriceResponse;
@@ -15,7 +15,7 @@ import java.util.*;
 import static com.example.Inditex.prices.exceptions.rule.BusinessRulesError.BusinessError.*;
 
 @Service
-public class PriceService implements Price {
+public class PriceService implements Operations {
 
     private final PriceRepository priceRepository;
     private final PriceGenerator priceGenerator;
@@ -27,7 +27,7 @@ public class PriceService implements Price {
     }
 
     public PriceResponse savePrice(PriceIncomingDto priceIncomingDto) {
-        Prices price = priceGenerator.getPriceForCurrentBrand(priceIncomingDto);
+        Price price = priceGenerator.getPriceForCurrentBrand(priceIncomingDto);
 
         priceRepository.save(price);
 
@@ -36,9 +36,9 @@ public class PriceService implements Price {
 
     public PriceResponse getPrice(Integer brandId, Integer productId, Date startDate) {
         LocalDateTime convertToDateTime = priceGenerator.convertToDateTime(startDate);
-        List<Prices> prices = priceRepository.findPrices(convertToDateTime, brandId, productId);
+        List<Price> prices = priceRepository.findPrices(convertToDateTime, brandId, productId);
 
-        Optional<Prices> priceWithPriority = getPriceWithMorePriority(prices);
+        Optional<Price> priceWithPriority = getPriceWithMorePriority(prices);
 
         if (!priceWithPriority.isPresent()) {
             throw new BusinessException(PRICE_NOT_FOUND);
@@ -47,12 +47,12 @@ public class PriceService implements Price {
         return getPriceDtoFromNewPrice(priceWithPriority.get());
     }
 
-    private Optional<Prices> getPriceWithMorePriority(List<Prices> prices) {
+    private Optional<Price> getPriceWithMorePriority(List<Price> prices) {
         return prices.stream().
-                max(Comparator.comparing(Prices::getPriority));
+                max(Comparator.comparing(Price::getPriority));
     }
 
-    private PriceResponse getPriceDtoFromNewPrice(Prices price) {
+    private PriceResponse getPriceDtoFromNewPrice(Price price) {
         return PriceResponse.builder()
                 .withBrandId(price.getBrand().getId())
                 .withProductId(price.getProduct().getId())

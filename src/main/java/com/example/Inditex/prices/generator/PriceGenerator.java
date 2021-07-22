@@ -4,7 +4,7 @@ import com.example.Inditex.config.PriceConfig;
 import com.example.Inditex.prices.exceptions.*;
 import com.example.Inditex.prices.exceptions.TechnicalException;
 import com.example.Inditex.prices.model.Brand;
-import com.example.Inditex.prices.model.Prices;
+import com.example.Inditex.prices.model.Price;
 import com.example.Inditex.prices.model.Product;
 import com.example.Inditex.prices.repository.BrandRepository;
 import com.example.Inditex.prices.repository.ProductRepository;
@@ -41,13 +41,13 @@ public class PriceGenerator {
         this.productRepository = productRepository;
     }
 
-    public Prices getPriceForCurrentBrand(PriceIncomingDto priceIncomingDto) {
+    public Price getPriceForCurrentBrand(PriceIncomingDto priceIncomingDto) {
 
         Brand brand = getGroupOfBrand((long) priceIncomingDto.getBrand());
         Product product = getProductOfBrand((long) priceIncomingDto.getProduct());
         LocalDateTime startDate = convertToDateTime(priceIncomingDto.getStartDate());
 
-        return Prices.builder()
+        return Price.builder()
                 .withGroup(brand)
                 .withPrice(getFinalPrice())
                 .withCurr(getCurrency())

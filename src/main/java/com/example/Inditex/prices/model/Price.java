@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Prices implements Serializable {
+public class Price implements Serializable {
 
     @Id
     @Getter
@@ -60,54 +60,54 @@ public class Prices implements Serializable {
     }
 
     public static class Builder {
-        private Prices prices;
+        private Price price;
 
         public Builder() {
-            this.prices = new Prices();
+            this.price = new Price();
         }
 
         public Builder withGroup(Brand group) {
-            prices.setBrand(group);
+            price.setBrand(group);
             return this;
         }
 
         public Builder withStartDate(LocalDateTime startDate) {
-            prices.setStartDate(startDate);
+            price.setStartDate(startDate);
             return this;
         }
 
         public Builder withEndDate(LocalDateTime endDate) {
-            prices.setEndDate(endDate);
+            price.setEndDate(endDate);
             return this;
         }
 
         public Builder withPriceList(int priceList) {
-            prices.setPriceList(priceList);
+            price.setPriceList(priceList);
             return this;
         }
 
         public Builder withProduct(Product product) {
-            prices.setProduct(product);
+            price.setProduct(product);
             return this;
         }
 
         public Builder withPriority(int priority) {
-            prices.setPriority(priority);
+            price.setPriority(priority);
             return this;
         }
 
         public Builder withPrice(float finalPrice) {
-            prices.setFinalPrice(finalPrice);
+            price.setFinalPrice(finalPrice);
             return this;
         }
 
         public Builder withCurr(String actualCurr) {
-            prices.setCurr(actualCurr);
+            price.setCurr(actualCurr);
             return this;
         }
 
-        public Prices build() {
-            return prices;
+        public Price build() {
+            return price;
         }
     }
 }

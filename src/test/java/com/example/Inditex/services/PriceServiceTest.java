@@ -3,7 +3,7 @@ package com.example.Inditex.services;
 import com.example.Inditex.prices.exceptions.*;
 import com.example.Inditex.prices.exceptions.TechnicalException;
 import com.example.Inditex.prices.model.Brand;
-import com.example.Inditex.prices.model.Prices;
+import com.example.Inditex.prices.model.Price;
 import com.example.Inditex.prices.model.Product;
 import com.example.Inditex.prices.repository.PriceRepository;
 import com.example.Inditex.prices.generator.PriceGenerator;
@@ -62,21 +62,21 @@ public class PriceServiceTest {
 
         float finalPrice = (float) 22.5;
 
-        Prices prices = new Prices(1L, brand, startDate, endDate, 1, product, 1, finalPrice, EUR);
+        Price price = new Price(1L, brand, startDate, endDate, 1, product, 1, finalPrice, EUR);
 
         //when
-        when(priceGenerator.getPriceForCurrentBrand(priceIncomingDto)).thenReturn(prices);
-        when(priceRepository.save(any())).thenReturn(prices);
+        when(priceGenerator.getPriceForCurrentBrand(priceIncomingDto)).thenReturn(price);
+        when(priceRepository.save(any())).thenReturn(price);
 
         PriceResponse priceResponse = priceService.savePrice(priceIncomingDto);
 
         //then
-        assertEquals(prices.getBrand().getId(), priceResponse.getBrandId());
-        assertEquals(prices.getEndDate(), priceResponse.getEndDate());
-        assertEquals(prices.getPriceList(), priceResponse.getPriceList());
-        assertEquals(prices.getStartDate(), priceResponse.getStartDate());
-        assertEquals(prices.getProduct().getId(), priceResponse.getProductId());
-        assertEquals(BigDecimal.valueOf(prices.getFinalPrice()), BigDecimal.valueOf(priceResponse.getPrice()));
+        assertEquals(price.getBrand().getId(), priceResponse.getBrandId());
+        assertEquals(price.getEndDate(), priceResponse.getEndDate());
+        assertEquals(price.getPriceList(), priceResponse.getPriceList());
+        assertEquals(price.getStartDate(), priceResponse.getStartDate());
+        assertEquals(price.getProduct().getId(), priceResponse.getProductId());
+        assertEquals(BigDecimal.valueOf(price.getFinalPrice()), BigDecimal.valueOf(priceResponse.getPrice()));
     }
 
     @Test(expected = TechnicalException.class)
@@ -96,7 +96,7 @@ public class PriceServiceTest {
 
         float finalPrice = (float) 22.5;
 
-        Prices prices = new Prices(1L, brand, startDate, endDate, 1, product, 1, finalPrice, EUR);
+        Price price = new Price(1L, brand, startDate, endDate, 1, product, 1, finalPrice, EUR);
 
         //when
         when(priceGenerator.getPriceForCurrentBrand(priceIncomingDto)).thenThrow(new TechnicalException("time out", new Exception()));
@@ -114,28 +114,28 @@ public class PriceServiceTest {
         LocalDateTime endDate = LocalDateTime.of(2020, Calendar.JULY, 15, 17, 50);
         float finalPrice = (float) 22.5;
 
-        Prices pricesWithLessPriority = new Prices(1L, brand, startDate, endDate, 1, product, 0, finalPrice, EUR);
-        Prices pricesWithMorePriority = new Prices(1L, brand, startDate, endDate, 1, otherProduct, 1, finalPrice, EUR);
+        Price priceWithLessPriority = new Price(1L, brand, startDate, endDate, 1, product, 0, finalPrice, EUR);
+        Price priceWithMorePriority = new Price(1L, brand, startDate, endDate, 1, otherProduct, 1, finalPrice, EUR);
 
-        LinkedList<Prices> pricesList = new LinkedList<>();
-        pricesList.add(pricesWithLessPriority);
-        pricesList.add(pricesWithMorePriority);
+        LinkedList<Price> priceList = new LinkedList<>();
+        priceList.add(priceWithLessPriority);
+        priceList.add(priceWithMorePriority);
 
         //when
         when(priceGenerator.convertToDateTime(any(Date.class))).thenReturn(startDate);
-        when(priceRepository.findPrices(any(LocalDateTime.class), any(Long.class), any(Long.class))).thenReturn(pricesList);
+        when(priceRepository.findPrices(any(LocalDateTime.class), any(Long.class), any(Long.class))).thenReturn(priceList);
 
 
         PriceResponse priceResponse = priceService.getPrice(brand.getId().intValue(),
                 product.getId().intValue(), new Date());
 
         //then
-        assertEquals(pricesWithMorePriority.getBrand().getId(), priceResponse.getBrandId());
-        assertEquals(pricesWithMorePriority.getEndDate(), priceResponse.getEndDate());
-        assertEquals(pricesWithMorePriority.getPriceList(), priceResponse.getPriceList());
-        assertEquals(pricesWithMorePriority.getStartDate(), priceResponse.getStartDate());
-        assertEquals(pricesWithMorePriority.getProduct().getId(), priceResponse.getProductId());
-        assertEquals(BigDecimal.valueOf(pricesWithMorePriority.getFinalPrice()), BigDecimal.valueOf(priceResponse.getPrice()));
+        assertEquals(priceWithMorePriority.getBrand().getId(), priceResponse.getBrandId());
+        assertEquals(priceWithMorePriority.getEndDate(), priceResponse.getEndDate());
+        assertEquals(priceWithMorePriority.getPriceList(), priceResponse.getPriceList());
+        assertEquals(priceWithMorePriority.getStartDate(), priceResponse.getStartDate());
+        assertEquals(priceWithMorePriority.getProduct().getId(), priceResponse.getProductId());
+        assertEquals(BigDecimal.valueOf(priceWithMorePriority.getFinalPrice()), BigDecimal.valueOf(priceResponse.getPrice()));
     }
 
     @Test(expected = BusinessException.class)
